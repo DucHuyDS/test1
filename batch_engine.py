@@ -42,11 +42,15 @@ def batch_trainer(cfg, args, epoch, model, model_ema, train_loader, criterion, o
         batch_time = time.time()
         imgs, gt_label = imgs.cuda(), gt_label.cuda()
 
-        aug = DataAugMethod(len(imgs))
-        imgs = aug.augment_input(imgs)
-        train_logits, feat = model(imgs, gt_label)
 
-        loss_list = [aug.augment_criterion(criterion, train_logits, gt_label)]
+        if epoch < cfg['TRAIN']['DATAAUG']['START_EPOCH']:
+            train_logits, feat = model(imgs, gt_label)
+            loss_list, loss_mtr = criterion(train_logits, gt_label)
+        else:
+            aug = DataAugMethod(len(imgs))
+            imgs = aug.augment_input(imgs)
+            train_logits, feat = model(imgs, gt_label)
+            loss_list = [aug.augment_criterion(criterion, train_logits, gt_label)]
 
 
         train_loss = 0

@@ -1,0 +1,92 @@
+NAME: 'model'
+REDIRECTOR: True
+DISTRIBUTTED: False
+
+DATASET:
+  TYPE: 'pedes'
+  NAME: 'PETA'
+  TRAIN_SPLIT: 'trainval'
+  VAL_SPLIT: 'test'
+  TEST_SPLIT: 'test'
+  ZERO_SHOT: False
+  LABEL: 'eval'
+  HEIGHT: 256
+  WIDTH: 192
+  TARGETTRANSFORM: []
+
+RELOAD:
+  TYPE: False
+  NAME: 'backbone'
+  PTH: ''
+
+BACKBONE:
+  TYPE: 'convnext' #twins-svt-small_3rdparty_8xb128_in1k
+  MULTISCALE: False
+
+CLASSIFIER:
+  NAME: 'linear'
+  POOLING: 'avg'
+  SCALE: 1
+  BN: False
+  TYPE: 'base'
+
+LOSS:
+  TYPE: 'bceloss'
+  LOSS_WEIGHT: [1]
+  SAMPLE_WEIGHT: 'weight' # ""
+  SIZESUM: True
+
+
+TRAIN:
+  CLIP_GRAD: True #False
+  BATCH_SIZE: 64
+  MAX_EPOCH: 30
+  SHUFFLE: True
+  NUM_WORKERS: 4
+  BN_WD: True
+  AUX_LOSS_START: -1
+  DATAAUG:
+    TYPE: 'base'
+    AUTOAUG_PROB: 0.5
+    START_EPOCH: 100
+  OPTIMIZER:
+    TYPE: 'adam' #adam
+    WEIGHT_DECAY: 0.0005 #5e-4
+    MOMENTUM: 0.9
+  LR_SCHEDULER:
+    TYPE: 'plateau'
+    LR_FT: 0.0001
+    LR_NEW: 0.0001
+    LR_STEP: [0]
+    WMUP_COEF: 0.1
+  EMA:
+    ENABLE: True
+    DECAY: 0.9998
+    FORCE_CPU: False 
+        
+        
+METRIC:
+  TYPE: 'pedestrian'
+
+VIS:
+  CAM: 'valid'
+  VISDOM: False
+  TENSORBOARD:
+    ENABLE: True
+
+
+
+
+INFER:
+  SAMPLING: False
+
+TRANS:
+  DIM_HIDDEN: 256
+  DROPOUT: 0.1
+  NHEADS: 8
+  DIM_FFD: 2048
+  ENC_LAYERS: 6
+  DEC_LAYERS: 6
+  PRE_NORM: False
+  EOS_COEF: 0.1
+  NUM_QUERIES: 100

@@ -1,0 +1,10 @@
+*.npy
+*.pth
+*.pyc
+*.out
+*.sh
+*.yaml
+data
+./env
+env
+exp_result
